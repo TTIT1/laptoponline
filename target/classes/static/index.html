@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản Lý Laptop</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- Login Page -->
+    <div id="loginPage" class="container">
+      <h2><i class="fas fa-laptop"></i> Đăng Nhập Hệ Thống</h2>
+      <div class="form-group">
+        <label for="username"><i class="fas fa-user"></i> Tên đăng nhập:</label>
+        <input type="text" id="username" placeholder="Nhập tên đăng nhập" />
+      </div>
+      <div class="form-group">
+        <label for="password"><i class="fas fa-lock"></i> Mật khẩu:</label>
+        <input type="password" id="password" placeholder="Nhập mật khẩu" />
+      </div>
+      <div class="form-group">
+        <button onclick="login()">
+          <i class="fas fa-sign-in-alt"></i> Đăng nhập
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="mainContent" class="container" style="display: none">
+      <div class="header">
+        <h1><i class="fas fa-laptop"></i> Quản Lý Laptop</h1>
+        <div class="user-info">
+          <span id="userDisplay"></span>
+          <button onclick="logout()" class="logout-btn">
+            <i class="fas fa-sign-out-alt"></i> Đăng xuất
+          </button>
+        </div>
+      </div>
+
+      <!-- Tab buttons -->
+      <div class="tabs">
+        <div class="tab active" onclick="openTab('addLaptopTab')">
+          <i class="fas fa-plus"></i> Thêm Laptop
+        </div>
+        <div class="tab" onclick="openTab('updateLaptopTab')">
+          <i class="fas fa-edit"></i> Cập Nhật
+        </div>
+        <div class="tab" onclick="openTab('deleteLaptopTab')">
+          <i class="fas fa-trash"></i> Xóa
+        </div>
+        <div class="tab" onclick="openTab('allLaptopsTab')">
+          <i class="fas fa-list"></i> Danh Sách
+        </div>
+      </div>
+
+      <!-- Tab contents -->
+      <!-- Add Laptop Tab -->
+      <div id="addLaptopTab" class="tab-content active">
+        <h2><i class="fas fa-plus-circle"></i> Thêm Laptop Mới</h2>
+        <div class="form-group">
+          <label for="addLaptopName"
+            ><i class="fas fa-laptop"></i> Tên Laptop:</label
+          >
+          <input type="text" id="addLaptopName" placeholder="Nhập tên laptop" />
+        </div>
+        <div class="form-group">
+          <label for="addTrademark"
+            ><i class="fas fa-trademark"></i> Thương hiệu:</label
+          >
+          <input type="text" id="addTrademark" placeholder="Nhập thương hiệu" />
+        </div>
+        <div class="form-group">
+          <label for="addMemory"><i class="fas fa-memory"></i> Bộ nhớ:</label>
+          <input
+            type="text"
+            id="addMemory"
+            placeholder="Nhập dung lượng bộ nhớ"
+          />
+        </div>
+        <div class="form-group">
+          <label for="addRAM"><i class="fas fa-microchip"></i> RAM:</label>
+          <input type="text" id="addRAM" placeholder="Nhập dung lượng RAM" />
+        </div>
+        <div class="form-group">
+          <label for="addPrice"><i class="fas fa-tags"></i> Giá:</label>
+          <input type="number" id="addPrice" placeholder="Nhập giá" />
+        </div>
+        <div class="form-group">
+          <label for="addChip"><i class="fas fa-microchip"></i> Chip:</label>
+          <input type="text" id="addChip" placeholder="Nhập loại chip" />
+        </div>
+        <div class="form-group">
+          <label for="addImage"><i class="fas fa-image"></i> Hình ảnh:</label>
+          <input
+            type="file"
+            id="addImage"
+            accept="image/*"
+            onchange="previewImage(this, 'addImagePreview')"
+          />
+          <img
+            id="addImagePreview"
+            class="image-preview"
+            src="#"
+            alt="Preview"
+            style="display: none"
+          />
+        </div>
+        <div class="form-group">
+          <button onclick="addLaptop()">
+            <i class="fas fa-plus"></i> Thêm Laptop
+          </button>
+        </div>
+      </div>
+
+      <!-- Update Laptop Tab -->
+      <div id="updateLaptopTab" class="tab-content">
+        <h2><i class="fas fa-edit"></i> Cập Nhật Laptop</h2>
+        <div class="form-group">
+          <label for="updateID"><i class="fas fa-key"></i> ID:</label>
+          <input type="number" id="updateID" placeholder="Nhập ID laptop" />
+        </div>
+        <div class="form-group">
+          <label for="updateLaptopName"
+            ><i class="fas fa-laptop"></i> Tên Laptop:</label
+          >
+          <input
+            type="text"
+            id="updateLaptopName"
+            placeholder="Nhập tên laptop"
+          />
+        </div>
+        <div class="form-group">
+          <label for="updateTrademark"
+            ><i class="fas fa-trademark"></i> Thương hiệu:</label
+          >
+          <input
+            type="text"
+            id="updateTrademark"
+            placeholder="Nhập thương hiệu"
+          />
+        </div>
+        <div class="form-group">
+          <label for="updateMemory"
+            ><i class="fas fa-memory"></i> Bộ nhớ:</label
+          >
+          <input
+            type="text"
+            id="updateMemory"
+            placeholder="Nhập dung lượng bộ nhớ"
+          />
+        </div>
+        <div class="form-group">
+          <label for="updateRAM"><i class="fas fa-microchip"></i> RAM:</label>
+          <input type="text" id="updateRAM" placeholder="Nhập dung lượng RAM" />
+        </div>
+        <div class="form-group">
+          <label for="updatePrice"><i class="fas fa-tags"></i> Giá:</label>
+          <input type="number" id="updatePrice" placeholder="Nhập giá" />
+        </div>
+        <div class="form-group">
+          <label for="updateChip"><i class="fas fa-microchip"></i> Chip:</label>
+          <input type="text" id="updateChip" placeholder="Nhập loại chip" />
+        </div>
+        <div class="form-group">
+          <label for="updateImage"
+            ><i class="fas fa-image"></i> Hình ảnh:</label
+          >
+          <input
+            type="file"
+            id="updateImage"
+            accept="image/*"
+            onchange="previewImage(this, 'updateImagePreview')"
+          />
+          <img
+            id="updateImagePreview"
+            class="image-preview"
+            src="#"
+            alt="Preview"
+          />
+        </div>
+        <div class="form-group">
+          <button onclick="updateLaptop()">
+            <i class="fas fa-save"></i> Cập Nhật
+          </button>
+        </div>
+      </div>
+
+      <!-- Delete Laptop Tab -->
+      <div id="deleteLaptopTab" class="tab-content">
+        <h2><i class="fas fa-trash"></i> Xóa Laptop</h2>
+        <div class="form-group">
+          <label for="deleteID"><i class="fas fa-key"></i> ID:</label>
+          <input
+            type="number"
+            id="deleteID"
+            placeholder="Nhập ID laptop cần xóa"
+          />
+        </div>
+        <div class="form-group">
+          <button onclick="deleteLaptop()">
+            <i class="fas fa-trash-alt"></i> Xóa
+          </button>
+        </div>
+      </div>
+
+      <!-- All Laptops Tab -->
+      <div id="allLaptopsTab" class="tab-content">
+        <h2><i class="fas fa-list"></i> Danh Sách Laptop</h2>
+
+        <!-- Thêm phần tìm kiếm và sắp xếp -->
+        <div class="search-sort-container">
+          <div class="search-box">
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Tìm kiếm laptop..."
+              onkeyup="searchLaptops()"
+            />
+            <i class="fas fa-search search-icon"></i>
+          </div>
+          <div class="sort-buttons">
+            <button onclick="sortLaptops('asc')" class="btn-sort">
+              <i class="fas fa-sort-amount-up"></i> Giá Tăng Dần
+            </button>
+            <button onclick="sortLaptops('desc')" class="btn-sort">
+              <i class="fas fa-sort-amount-down"></i> Giá Giảm Dần
+            </button>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Tên Laptop</th>
+                <th>Thương Hiệu</th>
+                <th>Bộ Nhớ</th>
+                <th>RAM</th>
+                <th>Giá</th>
+                <th>Chip</th>
+                <th>Hình Ảnh</th>
+                <th>Thao Tác</th>
+              </tr>
+            </thead>
+            <tbody id="laptopTableBody">
+              <!-- Dữ liệu sẽ được thêm vào đây bằng JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Change Password Form -->
+      <div id="changePasswordForm" class="hidden">
+        <h2><i class="fas fa-key"></i> Đổi Mật Khẩu</h2>
+        <div class="form-group">
+          <label for="oldPassword"
+            ><i class="fas fa-lock"></i> Mật khẩu cũ:</label
+          >
+          <input
+            type="password"
+            id="oldPassword"
+            placeholder="Nhập mật khẩu cũ"
+          />
+        </div>
+        <div class="form-group">
+          <label for="newPassword"
+            ><i class="fas fa-lock"></i> Mật khẩu mới:</label
+          >
+          <input
+            type="password"
+            id="newPassword"
+            placeholder="Nhập mật khẩu mới"
+          />
+        </div>
+        <div class="form-group">
+          <button onclick="submitChangePassword()">
+            <i class="fas fa-check"></i> Xác nhận
+          </button>
+        </div>
+      </div>
+
+      <!-- Form thanh toán -->
+      <div id="purchaseForm" class="modal hidden">
+        <div class="modal-content">
+          <h2><i class="fas fa-shopping-cart"></i> Thông Tin Thanh Toán</h2>
+          <div class="form-group">
+            <label><i class="fas fa-user"></i> Tên khách hàng:</label>
+            <input type="text" id="customerName" required />
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-envelope"></i> Email:</label>
+            <input type="email" id="customerEmail" required />
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-phone"></i> Số điện thoại:</label>
+            <input type="tel" id="customerPhone" required />
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-map-marker-alt"></i> Địa chỉ:</label>
+            <textarea id="customerAddress" required></textarea>
+          </div>
+          <div class="form-group">
+            <label
+              ><i class="fas fa-credit-card"></i> Phương thức thanh toán:</label
+            >
+            <select id="paymentMethod">
+              <option value="COD">Thanh toán khi nhận hàng</option>
+              <option value="BANK">Chuyển khoản ngân hàng</option>
+              <option value="MOMO">Ví MoMo</option>
+            </select>
+          </div>
+          <div class="form-group buttons">
+            <button onclick="processPurchase()" class="btn-confirm">
+              <i class="fas fa-check"></i> Xác nhận
+            </button>
+            <button onclick="hidePurchaseForm()" class="btn-cancel">
+              <i class="fas fa-times"></i> Hủy
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+  </body>
+</html>
