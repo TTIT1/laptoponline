@@ -273,3 +273,241 @@ async function processPurchase() {
     alert("Lỗi khi xử lý đơn hàng: " + error.message);
   }
 }
+
+// Các biến global
+let laptopsList = [];
+let selectedLaptopId = null;
+
+// Hàm hiển thị loading
+function showLoading() {
+  // Có thể thêm spinner loading nếu cần
+}
+
+// Hàm ẩn loading
+function hideLoading() {
+  // Có thể ẩn spinner loading nếu cần
+}
+
+// Hàm cập nhật hiển thị user
+function updateUserDisplay() {
+  const username = localStorage.getItem("username");
+  if (username) {
+    document.getElementById("userDisplay").textContent = `Xin chào, ${username}`;
+  }
+}
+
+// Hàm chuyển tab
+function openTab(tabName) {
+  // Ẩn tất cả tab content
+  const tabContents = document.querySelectorAll('.tab-content');
+  tabContents.forEach(tab => tab.classList.remove('active'));
+  
+  // Ẩn tất cả tab buttons
+  const tabs = document.querySelectorAll('.tab');
+  tabs.forEach(tab => tab.classList.remove('active'));
+  
+  // Hiển thị tab được chọn
+  document.getElementById(tabName).classList.add('active');
+  
+  // Highlight tab button được chọn
+  event.target.classList.add('active');
+  
+  // Nếu là tab danh sách laptop, load lại dữ liệu
+  if (tabName === 'allLaptopsTab') {
+    fetchLaptops();
+  }
+}
+
+// Hàm preview hình ảnh
+function previewImage(input, previewId) {
+  const file = input.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const preview = document.getElementById(previewId);
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+// Hàm hiển thị danh sách laptop
+function displayLaptops(laptops) {
+  const tbody = document.getElementById('laptopTableBody');
+  tbody.innerHTML = '';
+  
+  laptops.forEach(laptop => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${laptop.id}</td>
+      <td>${laptop.laptopName}</td>
+      <td>${laptop.trademark}</td>
+      <td>${laptop.parameter.memory}</td>
+      <td>${laptop.parameter.ram}</td>
+      <td>${laptop.parameter.price.toLocaleString()} VNĐ</td>
+      <td>${laptop.parameter.chip}</td>
+      <td><img src="${laptop.imageUrl || '#'}" alt="Laptop" style="width: 50px; height: 50px; object-fit: cover;"></td>
+      <td>
+        <button onclick="selectLaptopForPurchase(${laptop.id})" class="btn-buy">
+          <i class="fas fa-shopping-cart"></i> Mua
+        </button>
+      </td>
+    `;
+    tbody.appendChild(row);
+  });
+}
+
+// Hàm chọn laptop để mua
+function selectLaptopForPurchase(laptopId) {
+  selectedLaptopId = laptopId;
+  document.getElementById('purchaseForm').classList.remove('hidden');
+}
+
+// Hàm ẩn form mua hàng
+function hidePurchaseForm() {
+  document.getElementById('purchaseForm').classList.add('hidden');
+  selectedLaptopId = null;
+}
+
+// Hàm cập nhật laptop
+async function updateLaptop() {
+  if (!isLoggedIn()) {
+    alert("Vui lòng đăng nhập!");
+    return;
+  }
+
+  const id = document.getElementById("updateID").value;
+  const laptopName = document.getElementById("updateLaptopName").value;
+  const trademark = document.getElementById("updateTrademark").value;
+  const memory = document.getElementById("updateMemory").value;
+  const ram = document.getElementById("updateRAM").value;
+  const price = document.getElementById("updatePrice").value;
+  const chip = document.getElementById("updateChip").value;
+
+  if (!id || !laptopName || !trademark || !memory || !ram || !price || !chip) {
+    alert("Vui lòng nhập đầy đủ thông tin!");
+    return;
+  }
+
+  let imageUrl = null;
+  const imageFile = document.getElementById("updateImage").files[0];
+  if (imageFile) {
+    try {
+      const data = await uploadImage(imageFile);
+      imageUrl = data.url;
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      alert("Lỗi khi upload hình ảnh!");
+      return;
+    }
+  }
+
+  const laptop = {
+    id: parseInt(id),
+    laptopName,
+    trademark,
+    parameter: {
+      memory,
+      ram,
+      price: parseFloat(price),
+      chip,
+    },
+    imageUrl,
+  };
+
+  showLoading();
+  fetch(`${apiUrl}/update`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+    body: JSON.stringify(laptop),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        return response.json().then((err) => Promise.reject(err));
+      }
+      return response.json();
+    })
+    .then(() => {
+      alert("Cập nhật laptop thành công!");
+      openTab("allLaptopsTab");
+      fetchLaptops();
+    })
+    .catch((error) => {
+      console.error("Error updating laptop:", error);
+      alert("Lỗi khi cập nhật laptop: " + (error.message || "Vui lòng thử lại"));
+    })
+    .finally(() => {
+      hideLoading();
+    });
+}
+
+// Hàm xóa laptop
+function deleteLaptop() {
+  if (!isLoggedIn()) {
+    alert("Vui lòng đăng nhập!");
+    return;
+  }
+
+  const id = document.getElementById("deleteID").value;
+  if (!id) {
+    alert("Vui lòng nhập ID laptop cần xóa!");
+    return;
+  }
+
+  if (!confirm("Bạn có chắc chắn muốn xóa laptop này?")) {
+    return;
+  }
+
+  showLoading();
+  fetch(`${apiUrl}/delete/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        return response.json().then((err) => Promise.reject(err));
+      }
+      return response.json();
+    })
+    .then(() => {
+      alert("Xóa laptop thành công!");
+      openTab("allLaptopsTab");
+      fetchLaptops();
+    })
+    .catch((error) => {
+      console.error("Error deleting laptop:", error);
+      alert("Lỗi khi xóa laptop: " + (error.message || "Vui lòng thử lại"));
+    })
+    .finally(() => {
+      hideLoading();
+    });
+}
+
+// Hàm tìm kiếm laptop
+function searchLaptops() {
+  const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+  const filteredLaptops = laptopsList.filter(laptop => 
+    laptop.laptopName.toLowerCase().includes(searchTerm) ||
+    laptop.trademark.toLowerCase().includes(searchTerm) ||
+    laptop.parameter.chip.toLowerCase().includes(searchTerm)
+  );
+  displayLaptops(filteredLaptops);
+}
+
+// Hàm sắp xếp laptop theo giá
+function sortLaptops(order) {
+  const sortedLaptops = [...laptopsList].sort((a, b) => {
+    if (order === 'asc') {
+      return a.parameter.price - b.parameter.price;
+    } else {
+      return b.parameter.price - a.parameter.price;
+    }
+  });
+  displayLaptops(sortedLaptops);
+}

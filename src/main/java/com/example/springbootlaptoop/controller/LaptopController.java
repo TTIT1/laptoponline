@@ -42,9 +42,9 @@ public class LaptopController {
         laptopService.deleteLaptopById(id);
     }
 
-     @PutMapping("/update/{id}")
-    public Laptop updeta (@PathVariable Long id , @RequestBody Laptop laptop) {
-         Laptop laptop1 = laptopService.findById(id).orElseThrow();
+     @PutMapping("/update")
+    public Laptop updeta (@RequestBody Laptop laptop) {
+         Laptop laptop1 = laptopService.findById(laptop.getId()).orElseThrow();
 
          laptop1.setLaptopName(laptop.getLaptopName());
          laptop1.setTrademark(laptop.getTrademark());
