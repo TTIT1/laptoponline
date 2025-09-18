@@ -229,6 +229,17 @@ tr:hover {
   }
 }
 
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Overlay for loading */
 .loader::before {
   content: "";
@@ -410,7 +421,7 @@ td:nth-child(8) {
 
 /* Modal Styles */
 .modal {
-  display: none;
+  display: flex;
   position: fixed;
   top: 0;
   left: 0;
@@ -418,17 +429,89 @@ td:nth-child(8) {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 1000;
+  justify-content: center;
+  align-items: center;
 }
 
 .modal-content {
   background-color: white;
-  margin: 15% auto;
-  padding: 20px;
-  border-radius: 5px;
-  width: 80%;
+  padding: 30px;
+  border-radius: 10px;
+  width: 90%;
   max-width: 500px;
   position: relative;
   animation: slideIn 0.3s ease-out;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content h2 {
+  color: #1e3c72;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+.modal-content .form-group {
+  margin-bottom: 15px;
+}
+
+.modal-content .form-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #555;
+  font-weight: 500;
+}
+
+.modal-content .form-group input,
+.modal-content .form-group select,
+.modal-content .form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  transition: border-color 0.3s;
+}
+
+.modal-content .form-group input:focus,
+.modal-content .form-group select:focus,
+.modal-content .form-group textarea:focus {
+  outline: none;
+  border-color: #1e3c72;
+}
+
+.modal-content .buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.modal-content .buttons button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #999;
+  transition: color 0.3s;
+}
+
+.close-btn:hover {
+  color: #333;
 }
 
 .btn-buy {
@@ -480,6 +563,11 @@ td:nth-child(8) {
 
 .hidden {
   display: none !important;
+}
+
+/* Modal hiển thị khi không có class hidden */
+.modal:not(.hidden) {
+  display: flex !important;
 }
 
 .search-sort-container {

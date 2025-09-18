@@ -12,6 +12,13 @@ document.addEventListener("DOMContentLoaded", function () {
     fetchLaptops();
     updateUserDisplay();
   }
+  
+  // Thêm event listener để đóng modal khi click bên ngoài
+  document.getElementById('purchaseForm').addEventListener('click', function(e) {
+    if (e.target === this) {
+      hidePurchaseForm();
+    }
+  });
 });
 
 // Xử lý đăng nhập
@@ -361,12 +368,28 @@ function displayLaptops(laptops) {
 // Hàm chọn laptop để mua
 function selectLaptopForPurchase(laptopId) {
   selectedLaptopId = laptopId;
-  document.getElementById('purchaseForm').classList.remove('hidden');
+  
+  // Tìm laptop được chọn
+  const laptop = laptopsList.find(l => l.id === laptopId);
+  if (!laptop) {
+    alert("Không tìm thấy thông tin laptop!");
+    return;
+  }
+  
+  // Hiển thị modal
+  const modal = document.getElementById('purchaseForm');
+  modal.classList.remove('hidden');
+  modal.style.display = 'flex';
+  
+  // Có thể thêm thông tin laptop vào modal nếu cần
+  console.log("Đã chọn laptop:", laptop.laptopName);
 }
 
 // Hàm ẩn form mua hàng
 function hidePurchaseForm() {
-  document.getElementById('purchaseForm').classList.add('hidden');
+  const modal = document.getElementById('purchaseForm');
+  modal.classList.add('hidden');
+  modal.style.display = 'none';
   selectedLaptopId = null;
 }
 
