@@ -28,11 +28,11 @@
        
 
         <!-- MySQL Connector -->
-        <dependency>
+        <!-- <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.33</version>
-        </dependency>
+        </dependency> -->
 
         <!-- Hibernate Core with Jakarta -->
         <dependency>
@@ -55,7 +55,11 @@
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>2.6.0</version>
         </dependency>
-
+       <dependency>
+        <groupId>org.postgresql</groupId>
+        <artifactId>postgresql</artifactId>
+        <scope>runtime</scope>
+        </dependency>
 
         <!-- Hibernate Validator -->
         <dependency>
