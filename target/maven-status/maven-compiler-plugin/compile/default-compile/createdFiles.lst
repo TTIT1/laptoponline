@@ -21,6 +21,7 @@ com\example\springbootlaptoop\service\FileStorageService.class
 com\example\springbootlaptoop\SpringbootlaptoopApplication.class
 com\example\springbootlaptoop\service\InvoiceService.class
 com\example\springbootlaptoop\config\WebConfig.class
+com\example\springbootlaptoop\controller\TestEmailController.class
 com\example\springbootlaptoop\controller\OrderController.class
 com\example\springbootlaptoop\model\Laptop.class
 com\example\springbootlaptoop\controller\InvoiceController.class

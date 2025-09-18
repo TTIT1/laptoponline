@@ -25,8 +25,10 @@ public class InvoiceService {
         // Try sending email but do not fail the invoice creation if email fails
         try {
             sendInvoiceEmail(savedInvoice);
+            System.out.println("Email đã được gửi thành công đến: " + savedInvoice.getCustomerEmail());
         } catch (RuntimeException ex) {
             // Log and continue; depending on your logging setup, replace with logger
+            System.err.println("Lỗi khi gửi email: " + ex.getMessage());
             ex.printStackTrace();
         }
         return savedInvoice;
@@ -34,6 +36,8 @@ public class InvoiceService {
 
     private void sendInvoiceEmail(Invoice invoice) {
         try {
+            System.out.println("Đang gửi email đến: " + invoice.getCustomerEmail());
+            
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
@@ -72,7 +76,9 @@ public class InvoiceService {
 
             helper.setText(emailContent, false);
             mailSender.send(message);
+            System.out.println("Email đã được gửi thành công!");
         } catch (Exception e) {
+            System.err.println("Lỗi khi gửi email: " + e.getMessage());
             e.printStackTrace();
             // Wrap to signal failure to caller, handled in createInvoice
             throw new RuntimeException("Lỗi khi gửi email: " + e.getMessage());
