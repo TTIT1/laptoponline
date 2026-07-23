@@ -1,16 +1,19 @@
 package com.example.springbootlaptoop.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import lombok.Data;
 
 @Entity
-@Table(name = "users", uniqueConstraints = {
-    @UniqueConstraint(columnNames = "username")
-})
+@Data
+@Table(name="uSERis")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,6 +22,11 @@ public class User {
     private String password;
     private String email;
     private String role;
+
+    // @OneToMany(mappedBy = "user", fetch = jakarta.persistence.FetchType.LAZY,
+    //  cascade = jakarta.persistence.CascadeType.ALL,
+    // orphanRemoval = true)
+    // List<Role> roles = new ArrayList<>();
     
 
     public User() {
@@ -70,5 +78,13 @@ public class User {
     public void setRole(String role) {
         this.role = role;
     }
+
+    // public List<Role> getRoles() {
+    //     return roles;
+    // }
+
+    // public void setRoles(List<Role> roles) {
+    //     this.roles = roles;
+    // }
 }
 
